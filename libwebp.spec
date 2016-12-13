@@ -4,7 +4,7 @@
 #
 Name     : libwebp
 Version  : 0.5.1
-Release  : 2
+Release  : 3
 URL      : https://github.com/webmproject/libwebp/archive/v0.5.1.tar.gz
 Source0  : https://github.com/webmproject/libwebp/archive/v0.5.1.tar.gz
 Summary  : Library for the WebP graphics format (decode only)
@@ -14,10 +14,17 @@ Requires: libwebp-bin
 Requires: libwebp-lib
 Requires: libwebp-doc
 BuildRequires : freeglut-dev
+BuildRequires : gcc-dev32
+BuildRequires : gcc-libgcc32
+BuildRequires : gcc-libstdc++32
+BuildRequires : glibc-dev32
+BuildRequires : glibc-libc32
 BuildRequires : libjpeg-turbo-dev
+BuildRequires : libjpeg-turbo-dev32
+BuildRequires : libpng-dev32
+BuildRequires : mesa-dev32
 BuildRequires : pbr
 BuildRequires : pip
-BuildRequires : pkgconfig(libpng)
 BuildRequires : python-dev
 BuildRequires : setuptools
 
@@ -49,6 +56,17 @@ Provides: libwebp-devel
 dev components for the libwebp package.
 
 
+%package dev32
+Summary: dev32 components for the libwebp package.
+Group: Default
+Requires: libwebp-lib32
+Requires: libwebp-bin
+Requires: libwebp-dev
+
+%description dev32
+dev32 components for the libwebp package.
+
+
 %package doc
 Summary: doc components for the libwebp package.
 Group: Documentation
@@ -65,14 +83,33 @@ Group: Libraries
 lib components for the libwebp package.
 
 
+%package lib32
+Summary: lib32 components for the libwebp package.
+Group: Default
+
+%description lib32
+lib32 components for the libwebp package.
+
+
 %prep
 %setup -q -n libwebp-0.5.1
+pushd ..
+cp -a libwebp-0.5.1 build32
+popd
 
 %build
 export LANG=C
 %autogen --disable-static
 make V=1  %{?_smp_mflags}
 
+pushd ../build32/
+export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+export CFLAGS="$CFLAGS -m32"
+export CXXFLAGS="$CXXFLAGS -m32"
+export LDFLAGS="$LDFLAGS -m32"
+%autogen  --disable-static  --disable-gl --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
+make V=1  %{?_smp_mflags}
+popd
 %check
 export LANG=C
 export http_proxy=http://127.0.0.1:9/
@@ -82,6 +119,15 @@ make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
 rm -rf %{buildroot}
+pushd ../build32/
+%make_install32
+if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
+then
+pushd %{buildroot}/usr/lib32/pkgconfig
+for i in *.pc ; do ln -s $i 32$i ; done
+popd
+fi
+popd
 %make_install
 
 %files
@@ -100,6 +146,12 @@ rm -rf %{buildroot}
 /usr/lib64/libwebp.so
 /usr/lib64/pkgconfig/libwebp.pc
 
+%files dev32
+%defattr(-,root,root,-)
+/usr/lib32/libwebp.so
+/usr/lib32/pkgconfig/32libwebp.pc
+/usr/lib32/pkgconfig/libwebp.pc
+
 %files doc
 %defattr(-,root,root,-)
 %doc /usr/share/man/man1/*
@@ -108,3 +160,8 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 /usr/lib64/libwebp.so.6
 /usr/lib64/libwebp.so.6.0.1
+
+%files lib32
+%defattr(-,root,root,-)
+/usr/lib32/libwebp.so.6
+/usr/lib32/libwebp.so.6.0.1
