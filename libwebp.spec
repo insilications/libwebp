@@ -4,7 +4,7 @@
 #
 Name     : libwebp
 Version  : 0.5.1
-Release  : 1
+Release  : 2
 URL      : https://github.com/webmproject/libwebp/archive/v0.5.1.tar.gz
 Source0  : https://github.com/webmproject/libwebp/archive/v0.5.1.tar.gz
 Summary  : Library for the WebP graphics format (decode only)
@@ -97,8 +97,8 @@ rm -rf %{buildroot}
 /usr/include/webp/decode.h
 /usr/include/webp/encode.h
 /usr/include/webp/types.h
-/usr/lib64/*.so
-/usr/lib64/pkgconfig/*.pc
+/usr/lib64/libwebp.so
+/usr/lib64/pkgconfig/libwebp.pc
 
 %files doc
 %defattr(-,root,root,-)
@@ -106,4 +106,5 @@ rm -rf %{buildroot}
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/*.so.*
+/usr/lib64/libwebp.so.6
+/usr/lib64/libwebp.so.6.0.1
