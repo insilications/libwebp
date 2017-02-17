@@ -4,7 +4,7 @@
 #
 Name     : libwebp
 Version  : 0.6.0
-Release  : 5
+Release  : 6
 URL      : https://github.com/webmproject/libwebp/archive/v0.6.0.tar.gz
 Source0  : https://github.com/webmproject/libwebp/archive/v0.6.0.tar.gz
 Summary  : Library for the WebP graphics format (decode only)
@@ -100,7 +100,11 @@ popd
 
 %build
 export LANG=C
-export SOURCE_DATE_EPOCH=1485983205
+export SOURCE_DATE_EPOCH=1487353541
+export CFLAGS="$CFLAGS -fstack-protector-strong "
+export FCFLAGS="$CFLAGS -fstack-protector-strong "
+export FFLAGS="$CFLAGS -fstack-protector-strong "
+export CXXFLAGS="$CXXFLAGS -fstack-protector-strong "
 %autogen --disable-static
 make V=1  %{?_smp_mflags}
 
@@ -120,7 +124,7 @@ export no_proxy=localhost
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1485983205
+export SOURCE_DATE_EPOCH=1487353541
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
