@@ -4,7 +4,7 @@
 #
 Name     : libwebp
 Version  : 0.6.1
-Release  : 12
+Release  : 13
 URL      : https://github.com/webmproject/libwebp/archive/v0.6.1.tar.gz
 Source0  : https://github.com/webmproject/libwebp/archive/v0.6.1.tar.gz
 Summary  : Library for the WebP graphics format
