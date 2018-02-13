@@ -4,7 +4,7 @@
 #
 Name     : libwebp
 Version  : 0.6.1
-Release  : 13
+Release  : 14
 URL      : https://github.com/webmproject/libwebp/archive/v0.6.1.tar.gz
 Source0  : https://github.com/webmproject/libwebp/archive/v0.6.1.tar.gz
 Summary  : Library for the WebP graphics format
@@ -104,12 +104,12 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1511927487
+export SOURCE_DATE_EPOCH=1518543718
 export CFLAGS="$CFLAGS -fstack-protector-strong "
 export FCFLAGS="$CFLAGS -fstack-protector-strong "
 export FFLAGS="$CFLAGS -fstack-protector-strong "
 export CXXFLAGS="$CXXFLAGS -fstack-protector-strong "
-%autogen --disable-static
+%autogen --disable-static --enable-libwebpdemux
 make  %{?_smp_mflags}
 
 pushd ../build32/
@@ -117,7 +117,7 @@ export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 export CFLAGS="$CFLAGS -m32"
 export CXXFLAGS="$CXXFLAGS -m32"
 export LDFLAGS="$LDFLAGS -m32"
-%autogen --disable-static  --disable-gl --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
+%autogen --disable-static --enable-libwebpdemux --disable-gl --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make  %{?_smp_mflags}
 popd
 %check
@@ -128,7 +128,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1511927487
+export SOURCE_DATE_EPOCH=1518543718
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
@@ -152,16 +152,23 @@ popd
 %files dev
 %defattr(-,root,root,-)
 /usr/include/webp/decode.h
+/usr/include/webp/demux.h
 /usr/include/webp/encode.h
+/usr/include/webp/mux_types.h
 /usr/include/webp/types.h
 /usr/lib64/libwebp.so
+/usr/lib64/libwebpdemux.so
 /usr/lib64/pkgconfig/libwebp.pc
+/usr/lib64/pkgconfig/libwebpdemux.pc
 
 %files dev32
 %defattr(-,root,root,-)
 /usr/lib32/libwebp.so
+/usr/lib32/libwebpdemux.so
 /usr/lib32/pkgconfig/32libwebp.pc
+/usr/lib32/pkgconfig/32libwebpdemux.pc
 /usr/lib32/pkgconfig/libwebp.pc
+/usr/lib32/pkgconfig/libwebpdemux.pc
 
 %files doc
 %defattr(-,root,root,-)
@@ -171,8 +178,12 @@ popd
 %defattr(-,root,root,-)
 /usr/lib64/libwebp.so.7
 /usr/lib64/libwebp.so.7.0.1
+/usr/lib64/libwebpdemux.so.2
+/usr/lib64/libwebpdemux.so.2.0.3
 
 %files lib32
 %defattr(-,root,root,-)
 /usr/lib32/libwebp.so.7
 /usr/lib32/libwebp.so.7.0.1
+/usr/lib32/libwebpdemux.so.2
+/usr/lib32/libwebpdemux.so.2.0.3

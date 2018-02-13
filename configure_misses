@@ -2,7 +2,6 @@ Configure miss: whether asserts are enabled
 Configure miss: whether gcc supports -Wconstant-conversion
 Configure miss: whether gcc supports -Wparentheses-equality
 Configure miss: whether gcc supports -Wshorten-64-to-32
-Configure miss: if compiler needs -Werror to reject unknown flags
 Configure miss: GL/glut.h usability
 Configure miss: GL/glut.h presence
 Configure miss: GL/glut.h
@@ -28,18 +27,17 @@ Configure miss: if --enable-swap-16bit-csp option is specified
 Configure miss: if --enable-experimental option is specified
 Configure miss: if --disable-near-lossless option is specified
 Configure miss: whether libwebpmux is to be built
-Configure miss: whether libwebpdemux is to be built
 Configure miss: whether decoder library is to be built
 Configure miss: whether libwebpextras is to be built
-Configure miss: i686-generic-linux-gnu-objdump
-Configure miss: i686-generic-linux-gnu-dlltool
-Configure miss: i686-generic-linux-gnu-strip
-Configure miss: i686-generic-linux-gnu-mt
+Configure miss: i686-generic-linux-gnu-gcc
+Configure miss: i686-generic-linux-gnu-ar
+Configure miss: i686-generic-linux-gnu-lib
+Configure miss: i686-generic-linux-gnu-link
+Configure miss: i686-generic-linux-gnu-ranlib
 Configure miss: whether asserts are enabled
 Configure miss: whether gcc supports -Wconstant-conversion
 Configure miss: whether gcc supports -Wparentheses-equality
 Configure miss: whether gcc supports -Wshorten-64-to-32
-Configure miss: if compiler needs -Werror to reject unknown flags
 Configure miss: SDL/SDL.h usability
 Configure miss: SDL/SDL.h presence
 Configure miss: SDL/SDL.h
@@ -56,6 +54,5 @@ Configure miss: if --enable-swap-16bit-csp option is specified
 Configure miss: if --enable-experimental option is specified
 Configure miss: if --disable-near-lossless option is specified
 Configure miss: whether libwebpmux is to be built
-Configure miss: whether libwebpdemux is to be built
 Configure miss: whether decoder library is to be built
 Configure miss: whether libwebpextras is to be built
