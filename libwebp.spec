@@ -4,7 +4,7 @@
 #
 Name     : libwebp
 Version  : 1.0.0
-Release  : 22
+Release  : 23
 URL      : https://github.com/webmproject/libwebp/archive/v1.0.0.tar.gz
 Source0  : https://github.com/webmproject/libwebp/archive/v1.0.0.tar.gz
 Summary  : Library for the WebP graphics format
@@ -12,7 +12,8 @@ Group    : Development/Tools
 License  : BSD-3-Clause
 Requires: libwebp-bin
 Requires: libwebp-lib
-Requires: libwebp-doc
+Requires: libwebp-license
+Requires: libwebp-man
 BuildRequires : freeglut-dev
 BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
@@ -25,7 +26,6 @@ BuildRequires : libpng-dev32
 BuildRequires : mesa-dev32
 BuildRequires : pbr
 BuildRequires : pip
-
 BuildRequires : python3-dev
 BuildRequires : sed
 BuildRequires : setuptools
@@ -42,6 +42,8 @@ __   __  ____  ____  ____
 %package bin
 Summary: bin components for the libwebp package.
 Group: Binaries
+Requires: libwebp-license
+Requires: libwebp-man
 
 %description bin
 bin components for the libwebp package.
@@ -69,17 +71,10 @@ Requires: libwebp-dev
 dev32 components for the libwebp package.
 
 
-%package doc
-Summary: doc components for the libwebp package.
-Group: Documentation
-
-%description doc
-doc components for the libwebp package.
-
-
 %package lib
 Summary: lib components for the libwebp package.
 Group: Libraries
+Requires: libwebp-license
 
 %description lib
 lib components for the libwebp package.
@@ -88,9 +83,26 @@ lib components for the libwebp package.
 %package lib32
 Summary: lib32 components for the libwebp package.
 Group: Default
+Requires: libwebp-license
 
 %description lib32
 lib32 components for the libwebp package.
+
+
+%package license
+Summary: license components for the libwebp package.
+Group: Default
+
+%description license
+license components for the libwebp package.
+
+
+%package man
+Summary: man components for the libwebp package.
+Group: Default
+
+%description man
+man components for the libwebp package.
 
 
 %prep
@@ -107,12 +119,13 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1526011056
+export SOURCE_DATE_EPOCH=1530995601
 export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -fstack-protector-strong -mzero-caller-saved-regs=used "
 export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -fstack-protector-strong -mzero-caller-saved-regs=used "
-%autogen --disable-static --enable-libwebpdemux
+%autogen --disable-static --enable-libwebpdemux \
+--enable-libwebpmux
 make  %{?_smp_mflags}
 
 pushd ../build32/
@@ -120,14 +133,16 @@ export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 export CFLAGS="$CFLAGS -m32"
 export CXXFLAGS="$CXXFLAGS -m32"
 export LDFLAGS="$LDFLAGS -m32"
-%autogen --disable-static --enable-libwebpdemux --disable-gl --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
+%autogen --disable-static --enable-libwebpdemux \
+--enable-libwebpmux --disable-gl --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make  %{?_smp_mflags}
 popd
 pushd ../buildavx2/
 export CFLAGS="$CFLAGS -m64 -march=haswell "
 export CXXFLAGS="$CXXFLAGS -m64 -march=haswell "
 export LDFLAGS="$LDFLAGS -m64 -march=haswell "
-%autogen --disable-static --enable-libwebpdemux  --libdir=/usr/lib64/haswell --bindir=/usr/bin/haswell
+%autogen --disable-static --enable-libwebpdemux \
+--enable-libwebpmux
 make  %{?_smp_mflags}
 popd
 %check
@@ -138,8 +153,10 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1526011056
+export SOURCE_DATE_EPOCH=1530995601
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/doc/libwebp
+cp COPYING %{buildroot}/usr/share/doc/libwebp/COPYING
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -150,7 +167,7 @@ popd
 fi
 popd
 pushd ../buildavx2/
-%make_install
+%make_install_avx2
 popd
 %make_install
 
@@ -163,33 +180,42 @@ popd
 /usr/bin/dwebp
 /usr/bin/haswell/cwebp
 /usr/bin/haswell/dwebp
+/usr/bin/haswell/img2webp
+/usr/bin/haswell/webpinfo
+/usr/bin/haswell/webpmux
+/usr/bin/img2webp
+/usr/bin/webpinfo
+/usr/bin/webpmux
 
 %files dev
 %defattr(-,root,root,-)
 /usr/include/webp/decode.h
 /usr/include/webp/demux.h
 /usr/include/webp/encode.h
+/usr/include/webp/mux.h
 /usr/include/webp/mux_types.h
 /usr/include/webp/types.h
 /usr/lib64/haswell/libwebp.so
 /usr/lib64/haswell/libwebpdemux.so
+/usr/lib64/haswell/libwebpmux.so
 /usr/lib64/libwebp.so
 /usr/lib64/libwebpdemux.so
+/usr/lib64/libwebpmux.so
 /usr/lib64/pkgconfig/libwebp.pc
 /usr/lib64/pkgconfig/libwebpdemux.pc
+/usr/lib64/pkgconfig/libwebpmux.pc
 
 %files dev32
 %defattr(-,root,root,-)
 /usr/lib32/libwebp.so
 /usr/lib32/libwebpdemux.so
+/usr/lib32/libwebpmux.so
 /usr/lib32/pkgconfig/32libwebp.pc
 /usr/lib32/pkgconfig/32libwebpdemux.pc
+/usr/lib32/pkgconfig/32libwebpmux.pc
 /usr/lib32/pkgconfig/libwebp.pc
 /usr/lib32/pkgconfig/libwebpdemux.pc
-
-%files doc
-%defattr(-,root,root,-)
-%doc /usr/share/man/man1/*
+/usr/lib32/pkgconfig/libwebpmux.pc
 
 %files lib
 %defattr(-,root,root,-)
@@ -197,10 +223,14 @@ popd
 /usr/lib64/haswell/libwebp.so.7.0.2
 /usr/lib64/haswell/libwebpdemux.so.2
 /usr/lib64/haswell/libwebpdemux.so.2.0.4
+/usr/lib64/haswell/libwebpmux.so.3
+/usr/lib64/haswell/libwebpmux.so.3.0.2
 /usr/lib64/libwebp.so.7
 /usr/lib64/libwebp.so.7.0.2
 /usr/lib64/libwebpdemux.so.2
 /usr/lib64/libwebpdemux.so.2.0.4
+/usr/lib64/libwebpmux.so.3
+/usr/lib64/libwebpmux.so.3.0.2
 
 %files lib32
 %defattr(-,root,root,-)
@@ -208,3 +238,16 @@ popd
 /usr/lib32/libwebp.so.7.0.2
 /usr/lib32/libwebpdemux.so.2
 /usr/lib32/libwebpdemux.so.2.0.4
+/usr/lib32/libwebpmux.so.3
+/usr/lib32/libwebpmux.so.3.0.2
+
+%files license
+%defattr(-,root,root,-)
+/usr/share/doc/libwebp/COPYING
+
+%files man
+%defattr(-,root,root,-)
+/usr/share/man/man1/cwebp.1
+/usr/share/man/man1/dwebp.1
+/usr/share/man/man1/webpinfo.1
+/usr/share/man/man1/webpmux.1
