@@ -4,7 +4,7 @@
 #
 Name     : libwebp
 Version  : 1.0.0
-Release  : 15
+Release  : 18
 URL      : https://github.com/webmproject/libwebp/archive/v1.0.0.tar.gz
 Source0  : https://github.com/webmproject/libwebp/archive/v1.0.0.tar.gz
 Summary  : Library for the WebP graphics format
@@ -98,17 +98,20 @@ lib32 components for the libwebp package.
 pushd ..
 cp -a libwebp-1.0.0 build32
 popd
+pushd ..
+cp -a libwebp-1.0.0 buildavx2
+popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1524316540
-export CFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs "
-export FCFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs "
-export FFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs "
-export CXXFLAGS="$CXXFLAGS -fstack-protector-strong -mzero-caller-saved-regs "
+export SOURCE_DATE_EPOCH=1524317514
+export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -fstack-protector-strong -mzero-caller-saved-regs "
+export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -fstack-protector-strong -mzero-caller-saved-regs "
+export FFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -fstack-protector-strong -mzero-caller-saved-regs "
+export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -fstack-protector-strong -mzero-caller-saved-regs "
 %autogen --disable-static --enable-libwebpdemux
 make  %{?_smp_mflags}
 
@@ -120,6 +123,13 @@ export LDFLAGS="$LDFLAGS -m32"
 %autogen --disable-static --enable-libwebpdemux --disable-gl --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make  %{?_smp_mflags}
 popd
+pushd ../buildavx2/
+export CFLAGS="$CFLAGS -m64 -march=haswell "
+export CXXFLAGS="$CXXFLAGS -m64 -march=haswell "
+export LDFLAGS="$LDFLAGS -m64 -march=haswell "
+%autogen --disable-static --enable-libwebpdemux  --libdir=/usr/lib64/haswell --bindir=/usr/bin/haswell
+make  %{?_smp_mflags}
+popd
 %check
 export LANG=C
 export http_proxy=http://127.0.0.1:9/
@@ -128,7 +138,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1524316540
+export SOURCE_DATE_EPOCH=1524317514
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
@@ -139,6 +149,9 @@ for i in *.pc ; do ln -s $i 32$i ; done
 popd
 fi
 popd
+pushd ../buildavx2/
+%make_install
+popd
 %make_install
 
 %files
@@ -148,6 +161,8 @@ popd
 %defattr(-,root,root,-)
 /usr/bin/cwebp
 /usr/bin/dwebp
+/usr/bin/haswell/cwebp
+/usr/bin/haswell/dwebp
 
 %files dev
 %defattr(-,root,root,-)
@@ -156,6 +171,8 @@ popd
 /usr/include/webp/encode.h
 /usr/include/webp/mux_types.h
 /usr/include/webp/types.h
+/usr/lib64/haswell/libwebp.so
+/usr/lib64/haswell/libwebpdemux.so
 /usr/lib64/libwebp.so
 /usr/lib64/libwebpdemux.so
 /usr/lib64/pkgconfig/libwebp.pc
@@ -176,6 +193,10 @@ popd
 
 %files lib
 %defattr(-,root,root,-)
+/usr/lib64/haswell/libwebp.so.7
+/usr/lib64/haswell/libwebp.so.7.0.2
+/usr/lib64/haswell/libwebpdemux.so.2
+/usr/lib64/haswell/libwebpdemux.so.2.0.4
 /usr/lib64/libwebp.so.7
 /usr/lib64/libwebp.so.7.0.2
 /usr/lib64/libwebpdemux.so.2

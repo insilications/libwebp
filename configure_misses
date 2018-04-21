@@ -51,3 +51,34 @@ Configure miss: if --disable-near-lossless option is specified
 Configure miss: whether libwebpmux is to be built
 Configure miss: whether decoder library is to be built
 Configure miss: whether libwebpextras is to be built
+Configure miss: whether asserts are enabled
+Configure miss: whether gcc supports -Wconstant-conversion
+Configure miss: whether gcc supports -Wparentheses-equality
+Configure miss: whether gcc supports -Wshorten-64-to-32
+Configure miss: GL/glut.h usability
+Configure miss: GL/glut.h presence
+Configure miss: GL/glut.h
+Configure miss: GLUT/glut.h usability
+Configure miss: GLUT/glut.h presence
+Configure miss: GLUT/glut.h
+Configure miss: OpenGL/glut.h usability
+Configure miss: OpenGL/glut.h presence
+Configure miss: OpenGL/glut.h
+Configure miss: sdl-config
+Configure miss: SDL/SDL.h usability
+Configure miss: SDL/SDL.h presence
+Configure miss: SDL/SDL.h
+Configure miss: SDL.h usability
+Configure miss: SDL.h presence
+Configure miss: SDL.h
+Configure miss: tiffio.h usability
+Configure miss: tiffio.h presence
+Configure miss: tiffio.h
+Configure miss: gif_lib.h usability
+Configure miss: gif_lib.h presence
+Configure miss: gif_lib.h
+Configure miss: if --enable-swap-16bit-csp option is specified
+Configure miss: if --disable-near-lossless option is specified
+Configure miss: whether libwebpmux is to be built
+Configure miss: whether decoder library is to be built
+Configure miss: whether libwebpextras is to be built
