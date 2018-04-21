@@ -11,6 +11,7 @@ Configure miss: GLUT/glut.h
 Configure miss: OpenGL/glut.h usability
 Configure miss: OpenGL/glut.h presence
 Configure miss: OpenGL/glut.h
+Configure miss: sdl-config
 Configure miss: SDL/SDL.h usability
 Configure miss: SDL/SDL.h presence
 Configure miss: SDL/SDL.h
@@ -24,20 +25,15 @@ Configure miss: gif_lib.h usability
 Configure miss: gif_lib.h presence
 Configure miss: gif_lib.h
 Configure miss: if --enable-swap-16bit-csp option is specified
-Configure miss: if --enable-experimental option is specified
 Configure miss: if --disable-near-lossless option is specified
 Configure miss: whether libwebpmux is to be built
 Configure miss: whether decoder library is to be built
 Configure miss: whether libwebpextras is to be built
-Configure miss: i686-generic-linux-gnu-gcc
-Configure miss: i686-generic-linux-gnu-ar
-Configure miss: i686-generic-linux-gnu-lib
-Configure miss: i686-generic-linux-gnu-link
-Configure miss: i686-generic-linux-gnu-ranlib
 Configure miss: whether asserts are enabled
 Configure miss: whether gcc supports -Wconstant-conversion
 Configure miss: whether gcc supports -Wparentheses-equality
 Configure miss: whether gcc supports -Wshorten-64-to-32
+Configure miss: sdl-config
 Configure miss: SDL/SDL.h usability
 Configure miss: SDL/SDL.h presence
 Configure miss: SDL/SDL.h
@@ -51,7 +47,6 @@ Configure miss: gif_lib.h usability
 Configure miss: gif_lib.h presence
 Configure miss: gif_lib.h
 Configure miss: if --enable-swap-16bit-csp option is specified
-Configure miss: if --enable-experimental option is specified
 Configure miss: if --disable-near-lossless option is specified
 Configure miss: whether libwebpmux is to be built
 Configure miss: whether decoder library is to be built
