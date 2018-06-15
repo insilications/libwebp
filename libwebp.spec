@@ -25,7 +25,7 @@ BuildRequires : libpng-dev32
 BuildRequires : mesa-dev32
 BuildRequires : pbr
 BuildRequires : pip
-BuildRequires : python-dev
+
 BuildRequires : python3-dev
 BuildRequires : sed
 BuildRequires : setuptools
