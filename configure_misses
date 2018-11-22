@@ -28,11 +28,6 @@ Configure miss: if --enable-swap-16bit-csp option is specified
 Configure miss: if --disable-near-lossless option is specified
 Configure miss: whether decoder library is to be built
 Configure miss: whether libwebpextras is to be built
-Configure miss: i686-generic-linux-gnu-gcc
-Configure miss: i686-generic-linux-gnu-ar
-Configure miss: i686-generic-linux-gnu-lib
-Configure miss: i686-generic-linux-gnu-link
-Configure miss: i686-generic-linux-gnu-ranlib
 Configure miss: whether asserts are enabled
 Configure miss: whether gcc supports -Wconstant-conversion
 Configure miss: whether gcc supports -Wparentheses-equality
