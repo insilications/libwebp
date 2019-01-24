@@ -4,7 +4,7 @@
 #
 Name     : libwebp
 Version  : 1.0.2
-Release  : 25
+Release  : 26
 URL      : https://github.com/webmproject/libwebp/archive/v1.0.2.tar.gz
 Source0  : https://github.com/webmproject/libwebp/archive/v1.0.2.tar.gz
 Summary  : WebP library and conversion tools
