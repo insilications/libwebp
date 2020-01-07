@@ -51,6 +51,7 @@ libwebp.so.7:WebPINewYUVA
 libwebp.so.7:WebPIUpdate
 libwebp.so.7:WebPInitDecBufferInternal
 libwebp.so.7:WebPInitDecoderConfigInternal
+libwebp.so.7:WebPMalloc
 libwebp.so.7:WebPMemoryWrite
 libwebp.so.7:WebPMemoryWriterClear
 libwebp.so.7:WebPMemoryWriterInit
