@@ -1,5 +1,5 @@
 PKG_NAME := libwebp
-URL = https://github.com/webmproject/libwebp/archive/v1.1.0/libwebp-1.1.0.tar.gz
+URL = https://chromium.googlesource.com/webm/libwebp
 ARCHIVES = 
 
 include ../common/Makefile.common
