@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : libwebp
 Version  : 1.1.0
-Release  : 31
+Release  : 33
 URL      : file:///insilications/build/clearlinux/packages/libwebp/libwebp-v1.1.0.zip
 Source0  : file:///insilications/build/clearlinux/packages/libwebp/libwebp-v1.1.0.zip
 Summary  : Library for the WebP graphics format
@@ -97,12 +97,13 @@ find . -type f -name '*.ac' -exec sed -i 's/\-fPIC/\-fpic/g' {} \;
 find . -type f -name 'libtool*' -exec sed -i 's/\-fPIC/\-fpic/g' {} \;
 find . -type f -name '*.m4' -exec sed -i 's/\-fPIC/\-fpic/g' {} \;
 echo "AM_MAINTAINER_MODE([disable])" >> configure.ac
+find . -type f -name 'config.status' -exec touch {} \;
 ## build_prepend end
 unset http_proxy
 unset https_proxy
 unset no_proxy
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1595071197
+export SOURCE_DATE_EPOCH=1595072143
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -138,10 +139,10 @@ export LANG=C.UTF-8
 unset http_proxy
 unset https_proxy
 unset no_proxy
-make VERBOSE=1 V=1 %{?_smp_mflags} check
+make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1595071197
+export SOURCE_DATE_EPOCH=1595072143
 rm -rf %{buildroot}
 %make_install
 
@@ -166,6 +167,10 @@ rm -rf %{buildroot}
 /usr/include/webp/mux.h
 /usr/include/webp/mux_types.h
 /usr/include/webp/types.h
+/usr/lib64/libwebp.so
+/usr/lib64/libwebpdecoder.so
+/usr/lib64/libwebpdemux.so
+/usr/lib64/libwebpmux.so
 /usr/lib64/pkgconfig/libwebp.pc
 /usr/lib64/pkgconfig/libwebpdecoder.pc
 /usr/lib64/pkgconfig/libwebpdemux.pc
@@ -173,16 +178,12 @@ rm -rf %{buildroot}
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/libwebp.so
 /usr/lib64/libwebp.so.7
 /usr/lib64/libwebp.so.7.1.0
-/usr/lib64/libwebpdecoder.so
 /usr/lib64/libwebpdecoder.so.3
 /usr/lib64/libwebpdecoder.so.3.1.0
-/usr/lib64/libwebpdemux.so
 /usr/lib64/libwebpdemux.so.2
 /usr/lib64/libwebpdemux.so.2.0.6
-/usr/lib64/libwebpmux.so
 /usr/lib64/libwebpmux.so.3
 /usr/lib64/libwebpmux.so.3.0.5
 
