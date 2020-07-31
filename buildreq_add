@@ -1,9 +1,21 @@
 # This file contains additional build requirements that did not get
 # picked up automatically. One name per line, no whitespace.
-libjpeg-turbo-dev
-libpng-dev
-mesa-dev
-glu-dev
-tiff-dev
+buildreq-distutils3
+buildreq-golang
+findutils
 freeglut-dev
+gcc-dev32
+gcc-libgcc32
+gcc-libstdc++32
+glibc-dev32
+glibc-libc32
+glu-dev
+libjpeg-turbo-dev
+libjpeg-turbo-dev32
+libpng-dev
+libpng-dev32
+mesa-dev
+mesa-dev32
 SDL-dev
+sed
+tiff-dev

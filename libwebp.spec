@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : libwebp
 Version  : 1.1.0
-Release  : 33
+Release  : 34
 URL      : file:///insilications/build/clearlinux/packages/libwebp/libwebp-v1.1.0.zip
 Source0  : file:///insilications/build/clearlinux/packages/libwebp/libwebp-v1.1.0.zip
 Summary  : Library for the WebP graphics format
@@ -17,12 +17,21 @@ Requires: libwebp-man = %{version}-%{release}
 BuildRequires : SDL-dev
 BuildRequires : buildreq-distutils3
 BuildRequires : buildreq-golang
+BuildRequires : findutils
 BuildRequires : freeglut-dev
+BuildRequires : gcc-dev32
+BuildRequires : gcc-libgcc32
+BuildRequires : gcc-libstdc++32
 BuildRequires : giflib-dev
+BuildRequires : glibc-dev32
+BuildRequires : glibc-libc32
 BuildRequires : glu-dev
 BuildRequires : libjpeg-turbo-dev
+BuildRequires : libjpeg-turbo-dev32
 BuildRequires : libpng-dev
+BuildRequires : libpng-dev32
 BuildRequires : mesa-dev
+BuildRequires : mesa-dev32
 BuildRequires : pkgconfig(gl)
 BuildRequires : pkgconfig(glu)
 BuildRequires : pkgconfig(sdl)
@@ -61,12 +70,31 @@ Requires: libwebp = %{version}-%{release}
 dev components for the libwebp package.
 
 
+%package dev32
+Summary: dev32 components for the libwebp package.
+Group: Default
+Requires: libwebp-lib32 = %{version}-%{release}
+Requires: libwebp-bin = %{version}-%{release}
+Requires: libwebp-dev = %{version}-%{release}
+
+%description dev32
+dev32 components for the libwebp package.
+
+
 %package lib
 Summary: lib components for the libwebp package.
 Group: Libraries
 
 %description lib
 lib components for the libwebp package.
+
+
+%package lib32
+Summary: lib32 components for the libwebp package.
+Group: Default
+
+%description lib32
+lib32 components for the libwebp package.
 
 
 %package man
@@ -86,9 +114,21 @@ Requires: libwebp-dev = %{version}-%{release}
 staticdev components for the libwebp package.
 
 
+%package staticdev32
+Summary: staticdev32 components for the libwebp package.
+Group: Default
+Requires: libwebp-dev = %{version}-%{release}
+
+%description staticdev32
+staticdev32 components for the libwebp package.
+
+
 %prep
 %setup -q -n libwebp-v1.1.0
 cd %{_builddir}/libwebp-v1.1.0
+pushd ..
+cp -a libwebp-v1.1.0 build32
+popd
 
 %build
 ## build_prepend content
@@ -103,7 +143,7 @@ unset http_proxy
 unset https_proxy
 unset no_proxy
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1595072143
+export SOURCE_DATE_EPOCH=1596177051
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -134,16 +174,51 @@ find . -type f -name 'config.status' -exec touch {} \;
 ## make_prepend end
 make  %{?_smp_mflags}  V=1 VERBOSE=1
 
+pushd ../build32/
+## build_prepend content
+find . -type f -name 'configure*' -exec sed -i 's/\-fPIC/\-fpic/g' {} \;
+find . -type f -name '*.ac' -exec sed -i 's/\-fPIC/\-fpic/g' {} \;
+find . -type f -name 'libtool*' -exec sed -i 's/\-fPIC/\-fpic/g' {} \;
+find . -type f -name '*.m4' -exec sed -i 's/\-fPIC/\-fpic/g' {} \;
+echo "AM_MAINTAINER_MODE([disable])" >> configure.ac
+find . -type f -name 'config.status' -exec touch {} \;
+## build_prepend end
+export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
+export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
+export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
+export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32 -mstackrealign"
+%autogen  --enable-libwebpdemux --enable-libwebpmux --enable-static --enable-shared --enable-libwebpdecoder --enable-libwebpextras --enable-gl --enable-sdl --disable-maintainer-mode --disable-gl --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
+## make_prepend content
+find . -type f -name 'Makefile*' -exec sed -i 's/\-fPIC/\-fpic/g' {} \;
+#
+find . -type f -name 'libtool*' -exec sed -i 's/\-fPIC/\-fpic/g' {} \;
+find . -type f -name 'config.status' -exec touch {} \;
+## make_prepend end
+make  %{?_smp_mflags}  V=1 VERBOSE=1
+popd
+
 %check
 export LANG=C.UTF-8
 unset http_proxy
 unset https_proxy
 unset no_proxy
+make VERBOSE=1 V=1 %{?_smp_mflags} check
+cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1595072143
+export SOURCE_DATE_EPOCH=1596177051
 rm -rf %{buildroot}
+pushd ../build32/
+%make_install32
+if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
+then
+pushd %{buildroot}/usr/lib32/pkgconfig
+for i in *.pc ; do ln -s $i 32$i ; done
+popd
+fi
+popd
 %make_install
 
 %files
@@ -176,6 +251,21 @@ rm -rf %{buildroot}
 /usr/lib64/pkgconfig/libwebpdemux.pc
 /usr/lib64/pkgconfig/libwebpmux.pc
 
+%files dev32
+%defattr(-,root,root,-)
+/usr/lib32/libwebp.so
+/usr/lib32/libwebpdecoder.so
+/usr/lib32/libwebpdemux.so
+/usr/lib32/libwebpmux.so
+/usr/lib32/pkgconfig/32libwebp.pc
+/usr/lib32/pkgconfig/32libwebpdecoder.pc
+/usr/lib32/pkgconfig/32libwebpdemux.pc
+/usr/lib32/pkgconfig/32libwebpmux.pc
+/usr/lib32/pkgconfig/libwebp.pc
+/usr/lib32/pkgconfig/libwebpdecoder.pc
+/usr/lib32/pkgconfig/libwebpdemux.pc
+/usr/lib32/pkgconfig/libwebpmux.pc
+
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libwebp.so.7
@@ -186,6 +276,17 @@ rm -rf %{buildroot}
 /usr/lib64/libwebpdemux.so.2.0.6
 /usr/lib64/libwebpmux.so.3
 /usr/lib64/libwebpmux.so.3.0.5
+
+%files lib32
+%defattr(-,root,root,-)
+/usr/lib32/libwebp.so.7
+/usr/lib32/libwebp.so.7.1.0
+/usr/lib32/libwebpdecoder.so.3
+/usr/lib32/libwebpdecoder.so.3.1.0
+/usr/lib32/libwebpdemux.so.2
+/usr/lib32/libwebpdemux.so.2.0.6
+/usr/lib32/libwebpmux.so.3
+/usr/lib32/libwebpmux.so.3.0.5
 
 %files man
 %defattr(0644,root,root,0755)
@@ -203,3 +304,10 @@ rm -rf %{buildroot}
 /usr/lib64/libwebpdecoder.a
 /usr/lib64/libwebpdemux.a
 /usr/lib64/libwebpmux.a
+
+%files staticdev32
+%defattr(-,root,root,-)
+/usr/lib32/libwebp.a
+/usr/lib32/libwebpdecoder.a
+/usr/lib32/libwebpdemux.a
+/usr/lib32/libwebpmux.a
