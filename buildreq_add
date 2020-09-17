@@ -11,11 +11,14 @@ glibc-dev32
 glibc-libc32
 glu-dev
 libjpeg-turbo-dev
+libjpeg-turbo-staticdev
 libjpeg-turbo-dev32
 libpng-dev
+libpng-staticdev
 libpng-dev32
 mesa-dev
 mesa-dev32
 SDL-dev
 sed
 tiff-dev
+tiff-staticdev
