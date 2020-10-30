@@ -4,10 +4,10 @@
 #
 Name     : libwebp
 Version  : 1.1.0
-Release  : 30
+Release  : 31
 URL      : https://github.com/webmproject/libwebp/archive/v1.1.0/libwebp-1.1.0.tar.gz
 Source0  : https://github.com/webmproject/libwebp/archive/v1.1.0/libwebp-1.1.0.tar.gz
-Summary  : WebP library and conversion tools
+Summary  : Library for the WebP graphics format
 Group    : Development/Tools
 License  : BSD-3-Clause
 Requires: libwebp-bin = %{version}-%{release}
@@ -52,7 +52,6 @@ Group: Development
 Requires: libwebp-lib = %{version}-%{release}
 Requires: libwebp-bin = %{version}-%{release}
 Provides: libwebp-devel = %{version}-%{release}
-Requires: libwebp = %{version}-%{release}
 Requires: libwebp = %{version}-%{release}
 
 %description dev
@@ -119,16 +118,15 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1578415734
-# -Werror is for werrorists
+export SOURCE_DATE_EPOCH=1604079174
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fcf-protection=full -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -fstack-protector-strong "
-export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fcf-protection=full -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -fstack-protector-strong "
-export FFLAGS="$CFLAGS -O3 -falign-functions=32 -fcf-protection=full -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -fstack-protector-strong "
-export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -fcf-protection=full -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -fstack-protector-strong "
+export CFLAGS="$CFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -fstack-protector-strong -mzero-caller-saved-regs=used "
+export FCFLAGS="$FFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -fstack-protector-strong -mzero-caller-saved-regs=used "
+export FFLAGS="$FFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -fstack-protector-strong -mzero-caller-saved-regs=used "
+export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -fstack-protector-strong -mzero-caller-saved-regs=used "
 %autogen --disable-static --enable-libwebpdemux \
 --enable-libwebpmux
 make  %{?_smp_mflags}
@@ -146,6 +144,8 @@ popd
 pushd ../buildavx2/
 export CFLAGS="$CFLAGS -m64 -march=haswell "
 export CXXFLAGS="$CXXFLAGS -m64 -march=haswell "
+export FFLAGS="$FFLAGS -m64 -march=haswell "
+export FCFLAGS="$FCFLAGS -m64 -march=haswell "
 export LDFLAGS="$LDFLAGS -m64 -march=haswell "
 %autogen --disable-static --enable-libwebpdemux \
 --enable-libwebpmux
@@ -156,14 +156,14 @@ export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-make VERBOSE=1 V=1 %{?_smp_mflags} check
+make %{?_smp_mflags} check
 cd ../build32;
-make VERBOSE=1 V=1 %{?_smp_mflags} check || :
+make %{?_smp_mflags} check || :
 cd ../buildavx2;
-make VERBOSE=1 V=1 %{?_smp_mflags} check || :
+make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1578415734
+export SOURCE_DATE_EPOCH=1604079174
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libwebp
 cp %{_builddir}/libwebp-1.1.0/COPYING %{buildroot}/usr/share/package-licenses/libwebp/59cd938fcbd6735b1ef91781280d6eb6c4b7c5d9
