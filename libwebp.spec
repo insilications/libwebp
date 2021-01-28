@@ -4,10 +4,10 @@
 #
 %define keepstatic 1
 Name     : libwebp
-Version  : 1.1.0
-Release  : 35
-URL      : file:///insilications/build/clearlinux/packages/libwebp/libwebp-v1.1.0.tar.gz
-Source0  : file:///insilications/build/clearlinux/packages/libwebp/libwebp-v1.1.0.tar.gz
+Version  : 7
+Release  : 36
+URL      : file:///insilications/build/clearlinux/packages/libwebp/libwebp-7.tar.gz
+Source0  : file:///insilications/build/clearlinux/packages/libwebp/libwebp-7.tar.gz
 Summary  : Library for the WebP graphics format
 Group    : Development/Tools
 License  : BSD-3-Clause
@@ -28,8 +28,10 @@ BuildRequires : glibc-libc32
 BuildRequires : glu-dev
 BuildRequires : libjpeg-turbo-dev
 BuildRequires : libjpeg-turbo-dev32
+BuildRequires : libjpeg-turbo-staticdev
 BuildRequires : libpng-dev
 BuildRequires : libpng-dev32
+BuildRequires : libpng-staticdev
 BuildRequires : mesa-dev
 BuildRequires : mesa-dev32
 BuildRequires : pkgconfig(gl)
@@ -37,6 +39,7 @@ BuildRequires : pkgconfig(glu)
 BuildRequires : pkgconfig(sdl)
 BuildRequires : sed
 BuildRequires : tiff-dev
+BuildRequires : tiff-staticdev
 # Suppress stripping binaries
 %define __strip /bin/true
 %define debug_package %{nil}
@@ -117,7 +120,7 @@ staticdev components for the libwebp package.
 %package staticdev32
 Summary: staticdev32 components for the libwebp package.
 Group: Default
-Requires: libwebp-dev = %{version}-%{release}
+Requires: libwebp-dev32 = %{version}-%{release}
 
 %description staticdev32
 staticdev32 components for the libwebp package.
@@ -144,7 +147,7 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1599726998
+export SOURCE_DATE_EPOCH=1611836615
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -161,14 +164,11 @@ export CFFLAGS="-g -O3 -march=native -mtune=native -fgraphite-identity -Wall -Wl
 #
 export LDFLAGS="-g -O3 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -fno-common -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -fPIC"
 #
-export AR=gcc-ar
-export RANLIB=gcc-ranlib
-export NM=gcc-nm
+export AR=/usr/bin/gcc-ar
+export RANLIB=/usr/bin/gcc-ranlib
+export NM=/usr/bin/gcc-nm
 #export CCACHE_DISABLE=1
 ## altflags1 end
-##
-%define _lto_cflags 1
-##
 %autogen  --enable-libwebpdemux --enable-libwebpmux --enable-static --enable-shared --enable-libwebpdecoder --enable-libwebpextras --enable-gl --enable-sdl --disable-maintainer-mode
 ## make_prepend content
 find . -type f -name 'Makefile*' -exec sed -i 's/\-fPIC/\-fpic/g' {} \;
@@ -179,17 +179,9 @@ find . -type f -name 'config.status' -exec touch {} \;
 make  %{?_smp_mflags}  V=1 VERBOSE=1
 
 pushd ../build32/
-## build_prepend content
-find . -type f -name 'configure*' -exec sed -i 's/\-fPIC/\-fpic/g' {} \;
-find . -type f -name '*.ac' -exec sed -i 's/\-fPIC/\-fpic/g' {} \;
-find . -type f -name 'libtool*' -exec sed -i 's/\-fPIC/\-fpic/g' {} \;
-find . -type f -name '*.m4' -exec sed -i 's/\-fPIC/\-fpic/g' {} \;
-echo "AM_MAINTAINER_MODE([disable])" >> configure.ac
-find . -type f -name 'config.status' -exec touch {} \;
-## build_prepend end
-export CFLAGS="-g -O2 -fuse-linker-plugin -pipe"
-export CXXFLAGS="-g -O2 -fuse-linker-plugin -fvisibility-inlines-hidden -pipe"
-export LDFLAGS="-g -O2 -fuse-linker-plugin -pipe"
+export CFLAGS="-O2 -ffat-lto-objects -fuse-linker-plugin -pipe -fPIC -m32 -mstackrealign -march=native -mtune=native"
+export CXXFLAGS="-O2 -ffat-lto-objects -fuse-linker-plugin -fvisibility-inlines-hidden -pipe -fPIC -m32 -mstackrealign -march=native -mtune=native"
+export LDFLAGS="-O2 -ffat-lto-objects -fuse-linker-plugin -pipe -fPIC -m32 -mstackrealign -march=native -mtune=native"
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
@@ -220,7 +212,7 @@ cd ../build32;
 make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1599726998
+export SOURCE_DATE_EPOCH=1611836615
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32

@@ -2,18 +2,21 @@ Configure miss: whether asserts are enabled
 Configure miss: whether gcc supports -Wconstant-conversion
 Configure miss: whether gcc supports -Wparentheses-equality
 Configure miss: whether gcc supports -Wshorten-64-to-32
+Configure miss: whether gcc supports -Wunreachable-code-aggressive
 Configure miss: if --enable-swap-16bit-csp option is specified
 Configure miss: if --disable-near-lossless option is specified
 Configure miss: whether asserts are enabled
 Configure miss: whether gcc supports -Wconstant-conversion
 Configure miss: whether gcc supports -Wparentheses-equality
 Configure miss: whether gcc supports -Wshorten-64-to-32
+Configure miss: whether gcc supports -Wunreachable-code-aggressive
 Configure miss: if --enable-swap-16bit-csp option is specified
 Configure miss: if --disable-near-lossless option is specified
 Configure miss: whether asserts are enabled
 Configure miss: whether gcc supports -Wconstant-conversion
 Configure miss: whether gcc supports -Wparentheses-equality
 Configure miss: whether gcc supports -Wshorten-64-to-32
+Configure miss: whether gcc supports -Wunreachable-code-aggressive
 Configure miss: TIFFGetVersion in -ltiff
 Configure miss: DGifOpenFileHandle in -lgif
 Configure miss: if --enable-swap-16bit-csp option is specified
@@ -22,6 +25,7 @@ Configure miss: whether asserts are enabled
 Configure miss: whether gcc supports -Wconstant-conversion
 Configure miss: whether gcc supports -Wparentheses-equality
 Configure miss: whether gcc supports -Wshorten-64-to-32
+Configure miss: whether gcc supports -Wunreachable-code-aggressive
 Configure miss: TIFFGetVersion in -ltiff
 Configure miss: DGifOpenFileHandle in -lgif
 Configure miss: if --enable-swap-16bit-csp option is specified
