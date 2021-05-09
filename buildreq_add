@@ -18,8 +18,9 @@ libpng-dev
 libpng-dev32
 libpng-staticdev
 mesa-dev
-mesa-dev32
 SDL-dev
 sed
 tiff-dev
-tiff-staticdev
+nvidia
+nvidia-dev
+nvidia-lib
