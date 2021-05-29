@@ -4,16 +4,13 @@
 #
 %define keepstatic 1
 Name     : libwebp
-Version  : 7
-Release  : 37
-URL      : file:///aot/build/clearlinux/packages/libwebp/libwebp-7.tar.gz
-Source0  : file:///aot/build/clearlinux/packages/libwebp/libwebp-7.tar.gz
+Version  : 1.2.0
+Release  : 301
+URL      : file:///aot/build/clearlinux/packages/libwebp/libwebp-v1.2.0.tar.gz
+Source0  : file:///aot/build/clearlinux/packages/libwebp/libwebp-v1.2.0.tar.gz
 Summary  : Library for the WebP graphics format
 Group    : Development/Tools
 License  : BSD-3-Clause
-Requires: libwebp-bin = %{version}-%{release}
-Requires: libwebp-lib = %{version}-%{release}
-Requires: libwebp-man = %{version}-%{release}
 BuildRequires : SDL-dev
 BuildRequires : buildreq-distutils3
 BuildRequires : buildreq-golang
@@ -63,79 +60,6 @@ __   __  ____  ____  ____
 /  \_/   / /   \ \   __/  \__
 \____/____/\_____/_____/____/v1.2.0
 
-%package bin
-Summary: bin components for the libwebp package.
-Group: Binaries
-
-%description bin
-bin components for the libwebp package.
-
-
-%package dev
-Summary: dev components for the libwebp package.
-Group: Development
-Requires: libwebp-lib = %{version}-%{release}
-Requires: libwebp-bin = %{version}-%{release}
-Provides: libwebp-devel = %{version}-%{release}
-Requires: libwebp = %{version}-%{release}
-
-%description dev
-dev components for the libwebp package.
-
-
-%package dev32
-Summary: dev32 components for the libwebp package.
-Group: Default
-Requires: libwebp-lib32 = %{version}-%{release}
-Requires: libwebp-bin = %{version}-%{release}
-Requires: libwebp-dev = %{version}-%{release}
-
-%description dev32
-dev32 components for the libwebp package.
-
-
-%package lib
-Summary: lib components for the libwebp package.
-Group: Libraries
-
-%description lib
-lib components for the libwebp package.
-
-
-%package lib32
-Summary: lib32 components for the libwebp package.
-Group: Default
-
-%description lib32
-lib32 components for the libwebp package.
-
-
-%package man
-Summary: man components for the libwebp package.
-Group: Default
-
-%description man
-man components for the libwebp package.
-
-
-%package staticdev
-Summary: staticdev components for the libwebp package.
-Group: Default
-Requires: libwebp-dev = %{version}-%{release}
-
-%description staticdev
-staticdev components for the libwebp package.
-
-
-%package staticdev32
-Summary: staticdev32 components for the libwebp package.
-Group: Default
-Requires: libwebp-dev32 = %{version}-%{release}
-
-%description staticdev32
-staticdev32 components for the libwebp package.
-
-
 %prep
 %setup -q -n libwebp
 cd %{_builddir}/libwebp
@@ -157,7 +81,7 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1620555760
+export SOURCE_DATE_EPOCH=1622248462
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -198,6 +122,8 @@ export CCACHE_BASEDIR=/builddir/build/BUILD
 #export CCACHE_DEBUG=true
 #export CCACHE_NODIRECT=true
 ## altflags1 end
+sd -r '\s--dirty\s' ' ' .
+sd -r 'git describe' 'git describe --abbrev=0' .
 %autogen --enable-libwebpdemux --enable-libwebpmux --enable-static --enable-shared --enable-libwebpdecoder --enable-libwebpextras --enable-gl --enable-sdl --disable-maintainer-mode
 ## make_prepend content
 #find . -type f -name 'Makefile*' -exec sed -i 's/\-fPIC/\-fpic/g' {} \;
@@ -205,7 +131,7 @@ export CCACHE_BASEDIR=/builddir/build/BUILD
 #find . -type f -name 'libtool*' -exec sed -i 's/\-fPIC/\-fpic/g' {} \;
 #find . -type f -name 'config.status' -exec touch {} \;
 ## make_prepend end
-make  %{?_smp_mflags}  V=1 VERBOSE=1
+make  %{?_smp_mflags}  V=1 VERBOSE=1  V=1 VERBOSE=1
 
 pushd ../build32/
 export CFLAGS="-O2 -ffat-lto-objects -fuse-linker-plugin -pipe -fPIC -m32 -mstackrealign -march=native -mtune=native"
@@ -221,11 +147,11 @@ export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
 export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
 export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32 -mstackrealign"
 %autogen --enable-libwebpdemux --enable-libwebpmux --enable-static --enable-shared --enable-libwebpdecoder --enable-libwebpextras --enable-gl --enable-sdl --disable-maintainer-mode --disable-gl --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
-make  %{?_smp_mflags}  V=1 VERBOSE=1
+make  %{?_smp_mflags}  V=1 VERBOSE=1  V=1 VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1620555760
+export SOURCE_DATE_EPOCH=1622248462
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
@@ -237,94 +163,10 @@ then
 fi
 popd
 %make_install
+## install_append content
+install -dm 0755 %{buildroot}/usr/lib64/haswell/ || :
+cp --archive %{buildroot}/usr/lib64/lib*.so* %{buildroot}/usr/lib64/haswell/ || :
+## install_append end
 
 %files
 %defattr(-,root,root,-)
-
-%files bin
-%defattr(-,root,root,-)
-/usr/bin/cwebp
-/usr/bin/dwebp
-/usr/bin/gif2webp
-/usr/bin/img2webp
-/usr/bin/vwebp
-/usr/bin/webpinfo
-/usr/bin/webpmux
-
-%files dev
-%defattr(-,root,root,-)
-/usr/include/webp/decode.h
-/usr/include/webp/demux.h
-/usr/include/webp/encode.h
-/usr/include/webp/mux.h
-/usr/include/webp/mux_types.h
-/usr/include/webp/types.h
-/usr/lib64/libwebp.so
-/usr/lib64/libwebpdecoder.so
-/usr/lib64/libwebpdemux.so
-/usr/lib64/libwebpmux.so
-/usr/lib64/pkgconfig/libwebp.pc
-/usr/lib64/pkgconfig/libwebpdecoder.pc
-/usr/lib64/pkgconfig/libwebpdemux.pc
-/usr/lib64/pkgconfig/libwebpmux.pc
-
-%files dev32
-%defattr(-,root,root,-)
-/usr/lib32/libwebp.so
-/usr/lib32/libwebpdecoder.so
-/usr/lib32/libwebpdemux.so
-/usr/lib32/libwebpmux.so
-/usr/lib32/pkgconfig/32libwebp.pc
-/usr/lib32/pkgconfig/32libwebpdecoder.pc
-/usr/lib32/pkgconfig/32libwebpdemux.pc
-/usr/lib32/pkgconfig/32libwebpmux.pc
-/usr/lib32/pkgconfig/libwebp.pc
-/usr/lib32/pkgconfig/libwebpdecoder.pc
-/usr/lib32/pkgconfig/libwebpdemux.pc
-/usr/lib32/pkgconfig/libwebpmux.pc
-
-%files lib
-%defattr(-,root,root,-)
-/usr/lib64/libwebp.so.7
-/usr/lib64/libwebp.so.7.1.1
-/usr/lib64/libwebpdecoder.so.3
-/usr/lib64/libwebpdecoder.so.3.1.1
-/usr/lib64/libwebpdemux.so.2
-/usr/lib64/libwebpdemux.so.2.0.7
-/usr/lib64/libwebpmux.so.3
-/usr/lib64/libwebpmux.so.3.0.6
-
-%files lib32
-%defattr(-,root,root,-)
-/usr/lib32/libwebp.so.7
-/usr/lib32/libwebp.so.7.1.1
-/usr/lib32/libwebpdecoder.so.3
-/usr/lib32/libwebpdecoder.so.3.1.1
-/usr/lib32/libwebpdemux.so.2
-/usr/lib32/libwebpdemux.so.2.0.7
-/usr/lib32/libwebpmux.so.3
-/usr/lib32/libwebpmux.so.3.0.6
-
-%files man
-%defattr(0644,root,root,0755)
-/usr/share/man/man1/cwebp.1
-/usr/share/man/man1/dwebp.1
-/usr/share/man/man1/gif2webp.1
-/usr/share/man/man1/img2webp.1
-/usr/share/man/man1/vwebp.1
-/usr/share/man/man1/webpinfo.1
-/usr/share/man/man1/webpmux.1
-
-%files staticdev
-%defattr(-,root,root,-)
-/usr/lib64/libwebp.a
-/usr/lib64/libwebpdecoder.a
-/usr/lib64/libwebpdemux.a
-/usr/lib64/libwebpmux.a
-
-%files staticdev32
-%defattr(-,root,root,-)
-/usr/lib32/libwebp.a
-/usr/lib32/libwebpdecoder.a
-/usr/lib32/libwebpdemux.a
-/usr/lib32/libwebpmux.a

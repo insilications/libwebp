@@ -21,6 +21,3 @@ mesa-dev
 SDL-dev
 sed
 tiff-dev
-nvidia
-nvidia-dev
-nvidia-lib
