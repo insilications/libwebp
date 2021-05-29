@@ -11,10 +11,27 @@ Source0  : file:///aot/build/clearlinux/packages/libwebp/libwebp-v1.2.0.tar.gz
 Summary  : Library for the WebP graphics format
 Group    : Development/Tools
 License  : BSD-3-Clause
-BuildRequires : SDL-dev
+Requires: libwebp-bin = %{version}-%{release}
+Requires: libwebp-lib = %{version}-%{release}
+Requires: libwebp-man = %{version}-%{release}
+BuildRequires : Pygments
+BuildRequires : SDL2-dev
+BuildRequires : SDL2-staticdev
+BuildRequires : Sphinx
+BuildRequires : Z3-dev
+BuildRequires : Z3-dev32
+BuildRequires : Z3-staticdev
+BuildRequires : automake
+BuildRequires : automake-dev
 BuildRequires : buildreq-distutils3
 BuildRequires : buildreq-golang
+BuildRequires : docbook-utils
+BuildRequires : docbook-xml
+BuildRequires : doxygen
+BuildRequires : elfutils-dev
+BuildRequires : expect
 BuildRequires : findutils
+BuildRequires : flex
 BuildRequires : freeglut-dev
 BuildRequires : gcc
 BuildRequires : gcc-abi
@@ -26,27 +43,86 @@ BuildRequires : gcc-libs-math
 BuildRequires : gcc-libstdc++32
 BuildRequires : gcc-libubsan
 BuildRequires : gcc-locale
+BuildRequires : gdb-dev
 BuildRequires : giflib-dev
+BuildRequires : git
+BuildRequires : glibc-bin
+BuildRequires : glibc-dev
 BuildRequires : glibc-dev32
+BuildRequires : glibc-doc
+BuildRequires : glibc-extras
+BuildRequires : glibc-lib-avx2
 BuildRequires : glibc-libc32
+BuildRequires : glibc-locale
+BuildRequires : glibc-nscd
+BuildRequires : glibc-staticdev
+BuildRequires : glibc-utils
 BuildRequires : glu-dev
+BuildRequires : gmp-dev
+BuildRequires : googletest-dev
+BuildRequires : graphviz
+BuildRequires : guile
+BuildRequires : libedit
+BuildRequires : libedit-dev
+BuildRequires : libffi-dev
+BuildRequires : libffi-staticdev
 BuildRequires : libgcc1
 BuildRequires : libjpeg-turbo-dev
 BuildRequires : libjpeg-turbo-dev32
+BuildRequires : libjpeg-turbo-lib
+BuildRequires : libjpeg-turbo-lib32
 BuildRequires : libjpeg-turbo-staticdev
+BuildRequires : libjpeg-turbo-staticdev32
 BuildRequires : libpng-dev
 BuildRequires : libpng-dev32
+BuildRequires : libpng-lib
+BuildRequires : libpng-lib32
 BuildRequires : libpng-staticdev
+BuildRequires : libpng-staticdev32
 BuildRequires : libstdc++
+BuildRequires : libunwind-dev
+BuildRequires : libxml2-dev
+BuildRequires : libxml2-staticdev
+BuildRequires : libxslt
+BuildRequires : m4
 BuildRequires : mesa-dev
-BuildRequires : nvidia
-BuildRequires : nvidia-dev
-BuildRequires : nvidia-lib
+BuildRequires : mpc-dev
+BuildRequires : mpfr-dev
+BuildRequires : ncurses
+BuildRequires : ncurses-abi
+BuildRequires : ncurses-bin
+BuildRequires : ncurses-data
+BuildRequires : ncurses-data-rare
+BuildRequires : ncurses-dev
+BuildRequires : ncurses-dev32
+BuildRequires : ncurses-lib
+BuildRequires : ncurses-lib-narrow
+BuildRequires : ncurses-lib-plusplus
+BuildRequires : ncurses-lib32
+BuildRequires : ninja
 BuildRequires : pkgconfig(gl)
 BuildRequires : pkgconfig(glu)
 BuildRequires : pkgconfig(sdl)
+BuildRequires : procps-ng
+BuildRequires : python3-dev
+BuildRequires : python3-staticdev
 BuildRequires : sed
+BuildRequires : tcl
+BuildRequires : texinfo
 BuildRequires : tiff-dev
+BuildRequires : tiff-staticdev
+BuildRequires : util-linux
+BuildRequires : valgrind-dev
+BuildRequires : xz-dev
+BuildRequires : xz-dev32
+BuildRequires : xz-staticdev
+BuildRequires : xz-staticdev32
+BuildRequires : yaml
+BuildRequires : yaml-cpp
+BuildRequires : zlib-dev
+BuildRequires : zlib-dev32
+BuildRequires : zlib-staticdev
+BuildRequires : zlib-staticdev32
 # Suppress stripping binaries
 %define __strip /bin/true
 %define debug_package %{nil}
@@ -59,6 +135,79 @@ __   __  ____  ____  ____
 / _/ /    \    \ /  _ \/ _/
 /  \_/   / /   \ \   __/  \__
 \____/____/\_____/_____/____/v1.2.0
+
+%package bin
+Summary: bin components for the libwebp package.
+Group: Binaries
+
+%description bin
+bin components for the libwebp package.
+
+
+%package dev
+Summary: dev components for the libwebp package.
+Group: Development
+Requires: libwebp-lib = %{version}-%{release}
+Requires: libwebp-bin = %{version}-%{release}
+Provides: libwebp-devel = %{version}-%{release}
+Requires: libwebp = %{version}-%{release}
+
+%description dev
+dev components for the libwebp package.
+
+
+%package dev32
+Summary: dev32 components for the libwebp package.
+Group: Default
+Requires: libwebp-lib32 = %{version}-%{release}
+Requires: libwebp-bin = %{version}-%{release}
+Requires: libwebp-dev = %{version}-%{release}
+
+%description dev32
+dev32 components for the libwebp package.
+
+
+%package lib
+Summary: lib components for the libwebp package.
+Group: Libraries
+
+%description lib
+lib components for the libwebp package.
+
+
+%package lib32
+Summary: lib32 components for the libwebp package.
+Group: Default
+
+%description lib32
+lib32 components for the libwebp package.
+
+
+%package man
+Summary: man components for the libwebp package.
+Group: Default
+
+%description man
+man components for the libwebp package.
+
+
+%package staticdev
+Summary: staticdev components for the libwebp package.
+Group: Default
+Requires: libwebp-dev = %{version}-%{release}
+
+%description staticdev
+staticdev components for the libwebp package.
+
+
+%package staticdev32
+Summary: staticdev32 components for the libwebp package.
+Group: Default
+Requires: libwebp-dev32 = %{version}-%{release}
+
+%description staticdev32
+staticdev32 components for the libwebp package.
+
 
 %prep
 %setup -q -n libwebp
@@ -81,22 +230,22 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1622248462
+export SOURCE_DATE_EPOCH=1622288436
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
 ## altflags1 content
-export CFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc -Wl,--build-id=sha1"
+export CFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc -Wl,--build-id=sha1"
 # -ffat-lto-objects -fno-PIE -fno-PIE -m64 -no-pie -fPIC -Wl,-z,max-page-size=0x1000 -fvisibility=hidden -flto-partition=none
-# gcc: -feliminate-unused-debug-types -fipa-pta -flto=16 -Wno-error -Wp,-D_REENTRANT -fno-common
-export CXXFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -fvisibility-inlines-hidden -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc -Wl,--build-id=sha1"
+# gcc: -feliminate-unused-debug-types -fipa-pta -flto=16 -Wno-error -Wp,-D_REENTRANT -fno-common -funroll-loops
+export CXXFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -fvisibility-inlines-hidden -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc -Wl,--build-id=sha1"
 #
-export FCFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc -Wl,--build-id=sha1"
-export FFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -Wl,--build-id=sha1"
-export CFFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc -Wl,--build-id=sha1"
+export FCFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc -Wl,--build-id=sha1"
+export FFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -Wl,--build-id=sha1"
+export CFFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc -Wl,--build-id=sha1"
 #
-export LDFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc -lpthread -Wl,--build-id=sha1"
+export LDFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -flimit-function-alignment -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -floop-block -fno-math-errno -fno-semantic-interposition -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -fno-plt -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -ffat-lto-objects -fPIC -Wl,-z,max-page-size=0x1000 -fomit-frame-pointer -pthread -static-libstdc++ -static-libgcc -lpthread -Wl,--build-id=sha1"
 #
 export AR=/usr/bin/gcc-ar
 export RANLIB=/usr/bin/gcc-ranlib
@@ -151,7 +300,7 @@ make  %{?_smp_mflags}  V=1 VERBOSE=1  V=1 VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1622248462
+export SOURCE_DATE_EPOCH=1622288436
 rm -rf %{buildroot}
 pushd ../build32/
 %make_install32
@@ -170,3 +319,103 @@ cp --archive %{buildroot}/usr/lib64/lib*.so* %{buildroot}/usr/lib64/haswell/ || 
 
 %files
 %defattr(-,root,root,-)
+
+%files bin
+%defattr(-,root,root,-)
+/usr/bin/cwebp
+/usr/bin/dwebp
+/usr/bin/gif2webp
+/usr/bin/img2webp
+/usr/bin/vwebp
+/usr/bin/webpinfo
+/usr/bin/webpmux
+
+%files dev
+%defattr(-,root,root,-)
+/usr/include/webp/decode.h
+/usr/include/webp/demux.h
+/usr/include/webp/encode.h
+/usr/include/webp/mux.h
+/usr/include/webp/mux_types.h
+/usr/include/webp/types.h
+/usr/lib64/haswell/libwebp.so
+/usr/lib64/haswell/libwebpdecoder.so
+/usr/lib64/haswell/libwebpdemux.so
+/usr/lib64/haswell/libwebpmux.so
+/usr/lib64/libwebp.so
+/usr/lib64/libwebpdecoder.so
+/usr/lib64/libwebpdemux.so
+/usr/lib64/libwebpmux.so
+/usr/lib64/pkgconfig/libwebp.pc
+/usr/lib64/pkgconfig/libwebpdecoder.pc
+/usr/lib64/pkgconfig/libwebpdemux.pc
+/usr/lib64/pkgconfig/libwebpmux.pc
+
+%files dev32
+%defattr(-,root,root,-)
+/usr/lib32/libwebp.so
+/usr/lib32/libwebpdecoder.so
+/usr/lib32/libwebpdemux.so
+/usr/lib32/libwebpmux.so
+/usr/lib32/pkgconfig/32libwebp.pc
+/usr/lib32/pkgconfig/32libwebpdecoder.pc
+/usr/lib32/pkgconfig/32libwebpdemux.pc
+/usr/lib32/pkgconfig/32libwebpmux.pc
+/usr/lib32/pkgconfig/libwebp.pc
+/usr/lib32/pkgconfig/libwebpdecoder.pc
+/usr/lib32/pkgconfig/libwebpdemux.pc
+/usr/lib32/pkgconfig/libwebpmux.pc
+
+%files lib
+%defattr(-,root,root,-)
+/usr/lib64/haswell/libwebp.so.7
+/usr/lib64/haswell/libwebp.so.7.1.1
+/usr/lib64/haswell/libwebpdecoder.so.3
+/usr/lib64/haswell/libwebpdecoder.so.3.1.1
+/usr/lib64/haswell/libwebpdemux.so.2
+/usr/lib64/haswell/libwebpdemux.so.2.0.7
+/usr/lib64/haswell/libwebpmux.so.3
+/usr/lib64/haswell/libwebpmux.so.3.0.6
+/usr/lib64/libwebp.so.7
+/usr/lib64/libwebp.so.7.1.1
+/usr/lib64/libwebpdecoder.so.3
+/usr/lib64/libwebpdecoder.so.3.1.1
+/usr/lib64/libwebpdemux.so.2
+/usr/lib64/libwebpdemux.so.2.0.7
+/usr/lib64/libwebpmux.so.3
+/usr/lib64/libwebpmux.so.3.0.6
+
+%files lib32
+%defattr(-,root,root,-)
+/usr/lib32/libwebp.so.7
+/usr/lib32/libwebp.so.7.1.1
+/usr/lib32/libwebpdecoder.so.3
+/usr/lib32/libwebpdecoder.so.3.1.1
+/usr/lib32/libwebpdemux.so.2
+/usr/lib32/libwebpdemux.so.2.0.7
+/usr/lib32/libwebpmux.so.3
+/usr/lib32/libwebpmux.so.3.0.6
+
+%files man
+%defattr(0644,root,root,0755)
+/usr/share/man/man1/cwebp.1
+/usr/share/man/man1/dwebp.1
+/usr/share/man/man1/gif2webp.1
+/usr/share/man/man1/img2webp.1
+/usr/share/man/man1/vwebp.1
+/usr/share/man/man1/webpinfo.1
+/usr/share/man/man1/webpmux.1
+
+%files staticdev
+%defattr(-,root,root,-)
+/usr/lib64/libwebp.a
+/usr/lib64/libwebpdecoder.a
+/usr/lib64/libwebpdemux.a
+/usr/lib64/libwebpmux.a
+
+%files staticdev32
+%defattr(-,root,root,-)
+/usr/lib32/libwebp.a
+/usr/lib32/libwebpdecoder.a
+/usr/lib32/libwebpdemux.a
+/usr/lib32/libwebpmux.a
