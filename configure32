@@ -1,1 +1,9 @@
 --disable-gl
+--disable-static
+--enable-shared
+--disable-libwebpextras
+--disable-sdl
+--disable-png
+--disable-jpeg
+--disable-tiff
+--disable-gif

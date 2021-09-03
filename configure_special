@@ -1,0 +1,11 @@
+--enable-libwebpdemux
+--enable-libwebpmux
+--enable-static=no
+--disable-static
+--enable-shared
+--enable-libwebpdecoder
+--enable-libwebpextras
+--enable-gl
+--enable-sdl
+--disable-maintainer-mode
+--disable-asserts
