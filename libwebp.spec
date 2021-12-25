@@ -5,12 +5,15 @@
 %define keepstatic 1
 Name     : libwebp
 Version  : 1.2.2
-Release  : 307
+Release  : 308
 URL      : file:///aot/build/clearlinux/packages/libwebp/libwebp-v1.2.2.tar.gz
 Source0  : file:///aot/build/clearlinux/packages/libwebp/libwebp-v1.2.2.tar.gz
 Summary  : Library for the WebP graphics format
 Group    : Development/Tools
 License  : BSD-3-Clause
+Requires: libwebp-bin = %{version}-%{release}
+Requires: libwebp-lib = %{version}-%{release}
+Requires: libwebp-man = %{version}-%{release}
 BuildRequires : Pygments
 BuildRequires : SDL2-dev
 BuildRequires : Sphinx
@@ -107,6 +110,70 @@ __   __  ____  ____  ____
 /  \_/   / /   \ \   __/  \__
 \____/____/\_____/_____/____/v1.2.1
 
+%package bin
+Summary: bin components for the libwebp package.
+Group: Binaries
+
+%description bin
+bin components for the libwebp package.
+
+
+%package dev
+Summary: dev components for the libwebp package.
+Group: Development
+Requires: libwebp-lib = %{version}-%{release}
+Requires: libwebp-bin = %{version}-%{release}
+Provides: libwebp-devel = %{version}-%{release}
+Requires: libwebp = %{version}-%{release}
+
+%description dev
+dev components for the libwebp package.
+
+
+%package dev32
+Summary: dev32 components for the libwebp package.
+Group: Default
+Requires: libwebp-lib32 = %{version}-%{release}
+Requires: libwebp-bin = %{version}-%{release}
+Requires: libwebp-dev = %{version}-%{release}
+
+%description dev32
+dev32 components for the libwebp package.
+
+
+%package lib
+Summary: lib components for the libwebp package.
+Group: Libraries
+
+%description lib
+lib components for the libwebp package.
+
+
+%package lib32
+Summary: lib32 components for the libwebp package.
+Group: Default
+
+%description lib32
+lib32 components for the libwebp package.
+
+
+%package man
+Summary: man components for the libwebp package.
+Group: Default
+
+%description man
+man components for the libwebp package.
+
+
+%package staticdev
+Summary: staticdev components for the libwebp package.
+Group: Default
+Requires: libwebp-dev = %{version}-%{release}
+
+%description staticdev
+staticdev components for the libwebp package.
+
+
 %prep
 %setup -q -n libwebp
 cd %{_builddir}/libwebp
@@ -123,7 +190,7 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1640469804
+export SOURCE_DATE_EPOCH=1640471201
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -263,13 +330,13 @@ pushd examples/
 ./cwebp -q 100 -lossless decode_test1.ppm -mt -m 6 -o encode_test9.webp
 #
 curl -s -o "wallpaper.jpg" 'www.bing.com'$(curl -s 'http://www.bing.com/HPImageArchive.aspx?format=xml&idx=0&n=1&mkt=en-US' | grep -oP '(?<=<urlBase>)(.*?)(?=</urlBase>)')'_UHD''.jpg'
-./cwebp -q 80 wallpaper.jpg -o wallpaper_encode_test1.webp &
-./cwebp -q 100 wallpaper.jpg -o wallpaper_encode_test2.webp
-./cwebp -q 100 -lossless wallpaper.jpg -o wallpaper_encode_test3.webp &
-./cwebp -q 80 wallpaper.jpg -mt -o wallpaper_encode_test4.webp
-./cwebp -q 100 wallpaper.jpg -mt -o wallpaper_encode_test5.webp &
+./cwebp -q 80 wallpaper.jpg -o wallpaper_encode_test1.webp
+# ./cwebp -q 100 wallpaper.jpg -o wallpaper_encode_test2.webp
+# ./cwebp -q 100 -lossless wallpaper.jpg -o wallpaper_encode_test3.webp
+# ./cwebp -q 80 wallpaper.jpg -mt -o wallpaper_encode_test4.webp
+./cwebp -q 100 wallpaper.jpg -mt -o wallpaper_encode_test5.webp
 ./cwebp -q 100 -lossless wallpaper.jpg -mt -o wallpaper_encode_test6.webp
-./cwebp -q 80 wallpaper.jpg -mt -m 4 -o wallpaper_encode_test7.webp &
+./cwebp -q 80 wallpaper.jpg -mt -m 4 -o wallpaper_encode_test7.webp
 ./cwebp -q 100 wallpaper.jpg -mt -m 4 -o wallpaper_encode_test8.webp
 #
 ./dwebp wallpaper_encode_test8.webp -ppm -o wallpaper_decode_test1.ppm
@@ -281,15 +348,15 @@ curl -s -o "wallpaper.jpg" 'www.bing.com'$(curl -s 'http://www.bing.com/HPImageA
 #
 curl -s -o "wallpaper2.jpg" 'www.bing.com'$(curl -s 'http://www.bing.com/HPImageArchive.aspx?format=xml&idx=1&n=1&mkt=en-US' | grep -oP '(?<=<urlBase>)(.*?)(?=</urlBase>)')'_UHD''.jpg'
 curl -s -o "wallpaper3.jpg" 'www.bing.com'$(curl -s 'http://www.bing.com/HPImageArchive.aspx?format=xml&idx=2&n=1&mkt=en-US' | grep -oP '(?<=<urlBase>)(.*?)(?=</urlBase>)')'_UHD''.jpg'
-./cwebp -q 80 wallpaper.jpg -mt -m 4 -o wallpaper.webp
+./cwebp -q 50 wallpaper.jpg -mt -m 4 -o wallpaper.webp
 ./dwebp wallpaper.webp -resize 4641 2611 -mt -o wallpaper.png
-./cwebp -q 100 wallpaper2.jpg -mt -m 4 -o wallpaper2.webp
+./cwebp -q 50 wallpaper2.jpg -mt -m 4 -o wallpaper2.webp
 ./dwebp wallpaper2.webp -resize 4641 2611 -mt -tiff -o wallpaper2.tiff
-./cwebp -q 80 wallpaper3.jpg -mt -m 4 -o wallpaper3.webp
+./cwebp -q 50 wallpaper3.jpg -mt -m 4 -o wallpaper3.webp
 ./dwebp wallpaper3.webp -resize 4641 2611 -mt -o wallpaper3_t.jpg
-./img2webp -loop 2 wallpaper.png -lossy wallpaper3_t.jpg -d 80 wallpaper2.tiff -o gif.webp
+./img2webp -loop 2 wallpaper.png -lossy wallpaper3_t.jpg -d 50 wallpaper2.tiff -o gif.webp
 curl -s -o "gif.gif" https://media.giphy.com/media/Uufh1aEq0Nm8nWZfGP/giphy-downsized-large.gif
-./gif2webp -mt -q 80 -m 4 gif.gif -o gif2.webp
+./gif2webp -mt -q 60 -m 4 gif.gif -o gif2.webp
 #
 timeout 3s ./vwebp -mt gif.webp || :
 timeout 3s ./vwebp -mt gif2.webp || :
@@ -344,7 +411,6 @@ unset CFLAGS
 unset CXXFLAGS
 unset FCFLAGS
 unset FFLAGS
-unset CFFLAGS
 unset LDFLAGS
 unset LINKFLAGS
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
@@ -354,7 +420,6 @@ export ASMFLAGS="-O2 -ffat-lto-objects -fuse-linker-plugin -pipe -fPIC -march=na
 export CXXFLAGS="-O2 -ffat-lto-objects -fuse-linker-plugin -fvisibility-inlines-hidden -pipe -fPIC -march=native -mtune=native -m32 -mstackrealign"
 export FCFLAGS="-O2 -ffat-lto-objects -fuse-linker-plugin -fvisibility-inlines-hidden -pipe -fPIC -march=native -mtune=native -m32 -mstackrealign"
 export FFLAGS="-O2 -ffat-lto-objects -fuse-linker-plugin -fvisibility-inlines-hidden -pipe -fPIC -march=native -mtune=native -m32 -mstackrealign"
-export CFFLAGS="-O2 -ffat-lto-objects -fuse-linker-plugin -fvisibility-inlines-hidden -pipe -fPIC -march=native -mtune=native -m32 -mstackrealign"
 export LDFLAGS="-O2 -ffat-lto-objects -fuse-linker-plugin -pipe -fPIC -march=native -mtune=native -m32 -mstackrealign"
 %autogen  --disable-gl \
 --disable-static \
@@ -507,13 +572,13 @@ pushd examples/
 ./cwebp -q 100 -lossless decode_test1.ppm -mt -m 6 -o encode_test9.webp
 #
 curl -s -o "wallpaper.jpg" 'www.bing.com'$(curl -s 'http://www.bing.com/HPImageArchive.aspx?format=xml&idx=0&n=1&mkt=en-US' | grep -oP '(?<=<urlBase>)(.*?)(?=</urlBase>)')'_UHD''.jpg'
-./cwebp -q 80 wallpaper.jpg -o wallpaper_encode_test1.webp &
-./cwebp -q 100 wallpaper.jpg -o wallpaper_encode_test2.webp
-./cwebp -q 100 -lossless wallpaper.jpg -o wallpaper_encode_test3.webp &
-./cwebp -q 80 wallpaper.jpg -mt -o wallpaper_encode_test4.webp
-./cwebp -q 100 wallpaper.jpg -mt -o wallpaper_encode_test5.webp &
+./cwebp -q 80 wallpaper.jpg -o wallpaper_encode_test1.webp
+# ./cwebp -q 100 wallpaper.jpg -o wallpaper_encode_test2.webp
+# ./cwebp -q 100 -lossless wallpaper.jpg -o wallpaper_encode_test3.webp
+# ./cwebp -q 80 wallpaper.jpg -mt -o wallpaper_encode_test4.webp
+./cwebp -q 100 wallpaper.jpg -mt -o wallpaper_encode_test5.webp
 ./cwebp -q 100 -lossless wallpaper.jpg -mt -o wallpaper_encode_test6.webp
-./cwebp -q 80 wallpaper.jpg -mt -m 4 -o wallpaper_encode_test7.webp &
+./cwebp -q 80 wallpaper.jpg -mt -m 4 -o wallpaper_encode_test7.webp
 ./cwebp -q 100 wallpaper.jpg -mt -m 4 -o wallpaper_encode_test8.webp
 #
 ./dwebp wallpaper_encode_test8.webp -ppm -o wallpaper_decode_test1.ppm
@@ -525,15 +590,15 @@ curl -s -o "wallpaper.jpg" 'www.bing.com'$(curl -s 'http://www.bing.com/HPImageA
 #
 curl -s -o "wallpaper2.jpg" 'www.bing.com'$(curl -s 'http://www.bing.com/HPImageArchive.aspx?format=xml&idx=1&n=1&mkt=en-US' | grep -oP '(?<=<urlBase>)(.*?)(?=</urlBase>)')'_UHD''.jpg'
 curl -s -o "wallpaper3.jpg" 'www.bing.com'$(curl -s 'http://www.bing.com/HPImageArchive.aspx?format=xml&idx=2&n=1&mkt=en-US' | grep -oP '(?<=<urlBase>)(.*?)(?=</urlBase>)')'_UHD''.jpg'
-./cwebp -q 80 wallpaper.jpg -mt -m 4 -o wallpaper.webp
+./cwebp -q 50 wallpaper.jpg -mt -m 4 -o wallpaper.webp
 ./dwebp wallpaper.webp -resize 4641 2611 -mt -o wallpaper.png
-./cwebp -q 100 wallpaper2.jpg -mt -m 4 -o wallpaper2.webp
+./cwebp -q 50 wallpaper2.jpg -mt -m 4 -o wallpaper2.webp
 ./dwebp wallpaper2.webp -resize 4641 2611 -mt -tiff -o wallpaper2.tiff
-./cwebp -q 80 wallpaper3.jpg -mt -m 4 -o wallpaper3.webp
+./cwebp -q 50 wallpaper3.jpg -mt -m 4 -o wallpaper3.webp
 ./dwebp wallpaper3.webp -resize 4641 2611 -mt -o wallpaper3_t.jpg
-./img2webp -loop 2 wallpaper.png -lossy wallpaper3_t.jpg -d 80 wallpaper2.tiff -o gif.webp
+./img2webp -loop 2 wallpaper.png -lossy wallpaper3_t.jpg -d 50 wallpaper2.tiff -o gif.webp
 curl -s -o "gif.gif" https://media.giphy.com/media/Uufh1aEq0Nm8nWZfGP/giphy-downsized-large.gif
-./gif2webp -mt -q 80 -m 4 gif.gif -o gif2.webp
+./gif2webp -mt -q 60 -m 4 gif.gif -o gif2.webp
 #
 timeout 3s ./vwebp -mt gif.webp || :
 timeout 3s ./vwebp -mt gif2.webp || :
@@ -578,7 +643,7 @@ fi
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1640469804
+export SOURCE_DATE_EPOCH=1640471201
 rm -rf %{buildroot}
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -591,7 +656,6 @@ unset CFLAGS
 unset CXXFLAGS
 unset FCFLAGS
 unset FFLAGS
-unset CFFLAGS
 unset LDFLAGS
 unset LINKFLAGS
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
@@ -601,7 +665,6 @@ export ASMFLAGS="-O2 -ffat-lto-objects -fuse-linker-plugin -pipe -fPIC -march=na
 export CXXFLAGS="-O2 -ffat-lto-objects -fuse-linker-plugin -fvisibility-inlines-hidden -pipe -fPIC -march=native -mtune=native -m32 -mstackrealign"
 export FCFLAGS="-O2 -ffat-lto-objects -fuse-linker-plugin -fvisibility-inlines-hidden -pipe -fPIC -march=native -mtune=native -m32 -mstackrealign"
 export FFLAGS="-O2 -ffat-lto-objects -fuse-linker-plugin -fvisibility-inlines-hidden -pipe -fPIC -march=native -mtune=native -m32 -mstackrealign"
-export CFFLAGS="-O2 -ffat-lto-objects -fuse-linker-plugin -fvisibility-inlines-hidden -pipe -fPIC -march=native -mtune=native -m32 -mstackrealign"
 export LDFLAGS="-O2 -ffat-lto-objects -fuse-linker-plugin -pipe -fPIC -march=native -mtune=native -m32 -mstackrealign"
 pushd ../build32/
 %make_install32
@@ -827,3 +890,98 @@ cp --archive %{buildroot}/usr/lib64/lib*.so* %{buildroot}/usr/lib64/haswell/ || 
 
 %files
 %defattr(-,root,root,-)
+
+%files bin
+%defattr(-,root,root,-)
+/usr/bin/cwebp
+/usr/bin/dwebp
+/usr/bin/gif2webp
+/usr/bin/img2webp
+/usr/bin/vwebp
+/usr/bin/webpinfo
+/usr/bin/webpmux
+
+%files dev
+%defattr(-,root,root,-)
+/usr/include/webp/decode.h
+/usr/include/webp/demux.h
+/usr/include/webp/encode.h
+/usr/include/webp/mux.h
+/usr/include/webp/mux_types.h
+/usr/include/webp/types.h
+/usr/lib64/haswell/libwebp.so
+/usr/lib64/haswell/libwebpdecoder.so
+/usr/lib64/haswell/libwebpdemux.so
+/usr/lib64/haswell/libwebpmux.so
+/usr/lib64/libwebp.la
+/usr/lib64/libwebp.so
+/usr/lib64/libwebpdecoder.la
+/usr/lib64/libwebpdecoder.so
+/usr/lib64/libwebpdemux.la
+/usr/lib64/libwebpdemux.so
+/usr/lib64/libwebpmux.la
+/usr/lib64/libwebpmux.so
+/usr/lib64/pkgconfig/libwebp.pc
+/usr/lib64/pkgconfig/libwebpdecoder.pc
+/usr/lib64/pkgconfig/libwebpdemux.pc
+/usr/lib64/pkgconfig/libwebpmux.pc
+
+%files dev32
+%defattr(-,root,root,-)
+/usr/lib32/libwebp.la
+/usr/lib32/libwebp.so
+/usr/lib32/libwebpdemux.la
+/usr/lib32/libwebpdemux.so
+/usr/lib32/libwebpmux.la
+/usr/lib32/libwebpmux.so
+/usr/lib32/pkgconfig/32libwebp.pc
+/usr/lib32/pkgconfig/32libwebpdemux.pc
+/usr/lib32/pkgconfig/32libwebpmux.pc
+/usr/lib32/pkgconfig/libwebp.pc
+/usr/lib32/pkgconfig/libwebpdemux.pc
+/usr/lib32/pkgconfig/libwebpmux.pc
+
+%files lib
+%defattr(-,root,root,-)
+/usr/lib64/haswell/libwebp.so.7
+/usr/lib64/haswell/libwebp.so.7.1.2
+/usr/lib64/haswell/libwebpdecoder.so.3
+/usr/lib64/haswell/libwebpdecoder.so.3.1.2
+/usr/lib64/haswell/libwebpdemux.so.2
+/usr/lib64/haswell/libwebpdemux.so.2.0.8
+/usr/lib64/haswell/libwebpmux.so.3
+/usr/lib64/haswell/libwebpmux.so.3.0.7
+/usr/lib64/libwebp.so.7
+/usr/lib64/libwebp.so.7.1.2
+/usr/lib64/libwebpdecoder.so.3
+/usr/lib64/libwebpdecoder.so.3.1.2
+/usr/lib64/libwebpdemux.so.2
+/usr/lib64/libwebpdemux.so.2.0.8
+/usr/lib64/libwebpmux.so.3
+/usr/lib64/libwebpmux.so.3.0.7
+
+%files lib32
+%defattr(-,root,root,-)
+/usr/lib32/libwebp.so.7
+/usr/lib32/libwebp.so.7.1.2
+/usr/lib32/libwebpdemux.so.2
+/usr/lib32/libwebpdemux.so.2.0.8
+/usr/lib32/libwebpmux.so.3
+/usr/lib32/libwebpmux.so.3.0.7
+
+%files man
+%defattr(0644,root,root,0755)
+/usr/share/man/man1/cwebp.1
+/usr/share/man/man1/dwebp.1
+/usr/share/man/man1/gif2webp.1
+/usr/share/man/man1/img2webp.1
+/usr/share/man/man1/vwebp.1
+/usr/share/man/man1/webpinfo.1
+/usr/share/man/man1/webpmux.1
+
+%files staticdev
+%defattr(-,root,root,-)
+/usr/lib64/libwebp.a
+/usr/lib64/libwebpdecoder.a
+/usr/lib64/libwebpdemux.a
+/usr/lib64/libwebpmux.a

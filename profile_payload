@@ -36,15 +36,15 @@ curl -s -o "wallpaper.jpg" 'www.bing.com'$(curl -s 'http://www.bing.com/HPImageA
 #
 curl -s -o "wallpaper2.jpg" 'www.bing.com'$(curl -s 'http://www.bing.com/HPImageArchive.aspx?format=xml&idx=1&n=1&mkt=en-US' | grep -oP '(?<=<urlBase>)(.*?)(?=</urlBase>)')'_UHD''.jpg'
 curl -s -o "wallpaper3.jpg" 'www.bing.com'$(curl -s 'http://www.bing.com/HPImageArchive.aspx?format=xml&idx=2&n=1&mkt=en-US' | grep -oP '(?<=<urlBase>)(.*?)(?=</urlBase>)')'_UHD''.jpg'
-./cwebp -q 80 wallpaper.jpg -mt -m 4 -o wallpaper.webp
+./cwebp -q 50 wallpaper.jpg -mt -m 4 -o wallpaper.webp
 ./dwebp wallpaper.webp -resize 4641 2611 -mt -o wallpaper.png
-./cwebp -q 80 wallpaper2.jpg -mt -m 4 -o wallpaper2.webp
+./cwebp -q 50 wallpaper2.jpg -mt -m 4 -o wallpaper2.webp
 ./dwebp wallpaper2.webp -resize 4641 2611 -mt -tiff -o wallpaper2.tiff
-./cwebp -q 80 wallpaper3.jpg -mt -m 4 -o wallpaper3.webp
+./cwebp -q 50 wallpaper3.jpg -mt -m 4 -o wallpaper3.webp
 ./dwebp wallpaper3.webp -resize 4641 2611 -mt -o wallpaper3_t.jpg
-./img2webp -loop 2 wallpaper.png -lossy wallpaper3_t.jpg -d 80 wallpaper2.tiff -o gif.webp
+./img2webp -loop 2 wallpaper.png -lossy wallpaper3_t.jpg -d 50 wallpaper2.tiff -o gif.webp
 curl -s -o "gif.gif" https://media.giphy.com/media/Uufh1aEq0Nm8nWZfGP/giphy-downsized-large.gif
-./gif2webp -mt -q 80 -m 4 gif.gif -o gif2.webp
+./gif2webp -mt -q 60 -m 4 gif.gif -o gif2.webp
 #
 timeout 3s ./vwebp -mt gif.webp || :
 timeout 3s ./vwebp -mt gif2.webp || :
